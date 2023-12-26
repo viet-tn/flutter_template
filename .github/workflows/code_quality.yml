@@ -1,0 +1,25 @@
+name: Check and test the source code
+on:
+  pull_request:
+    branches:
+      - develop
+jobs:
+  test:
+    name: Check the source code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2.12.0
+        with:
+          channel: 'stable'
+          cache: true
+      - run: flutter --version
+
+      - name: Install packages
+        run: flutter pub get
+      - name: Run build_runner
+        run: dart run build_runner build
+      - name: Linter
+        run: flutter analyze
+      - name: Test
+        run: flutter test
