@@ -40,7 +40,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
   riverpod_generator: ^2.3.9
   very_good_analysis: ^5.1.0
-  custom_lint: any
+  custom_lint: 0.6.0
   riverpod_lint: any
 
 flutter:
