@@ -23,7 +23,7 @@ dependencies:
   json_annotation: ^4.8.1
 
   # Routing
-  go_router: ^13.0.0
+  go_router: ^13.2.2
 
   # Utils
   flutter_form_builder: ^9.1.1
