@@ -39,7 +39,7 @@ enum NavigationBarItems {
 
 extension NavigationBarItemsContext on BuildContext {
   String label(NavigationBarItems item) => switch (item) {
-        NavigationBarItems.home => l10n.home,
-        NavigationBarItems.settings => l10n.settings,
-      };
+    NavigationBarItems.home => l10n.home,
+    NavigationBarItems.settings => l10n.settings,
+  };
 }

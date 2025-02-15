@@ -11,16 +11,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.home),
-      ),
+      appBar: AppBar(title: Text(context.l10n.home)),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(context.l10n.home),
-            ],
+            children: [Text(context.l10n.home)],
           ),
         ),
       ),
@@ -29,9 +25,7 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               child: Text(
                 context.l10n.home,
                 style: context.text.headlineLarge?.copyWith(

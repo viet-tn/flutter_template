@@ -17,16 +17,17 @@ class BottomNavigationBarX extends StatelessWidget {
     return NavigationBar(
       selectedIndex: currentIndex,
       onDestinationSelected: onTap,
-      destinations: NavigationBarItems.values
-          .map(
-            (e) => NavigationDestination(
-              icon: Icon(e.icon),
-              label: context.label(e),
-              selectedIcon:
-                  e.selectedIcon != null ? Icon(e.selectedIcon) : null,
-            ),
-          )
-          .toList(),
+      destinations:
+          NavigationBarItems.values
+              .map(
+                (e) => NavigationDestination(
+                  icon: Icon(e.icon),
+                  label: context.label(e),
+                  selectedIcon:
+                      e.selectedIcon != null ? Icon(e.selectedIcon) : null,
+                ),
+              )
+              .toList(),
     );
   }
 }
