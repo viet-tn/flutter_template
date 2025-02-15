@@ -88,8 +88,8 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: _canPop,
-      onPopInvokedWithResult: (didPop, result) =>
-          _onPopInvoked(context, didPop),
+      onPopInvokedWithResult:
+          (didPop, result) => _onPopInvoked(context, didPop),
       child: MaterialApp.router(
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,

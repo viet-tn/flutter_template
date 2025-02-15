@@ -7,8 +7,9 @@ import '../features/home/widgets/dashboard_wrapper.dart';
 import '../features/settings/settings_screen.dart';
 import 'route_names.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
 
 final appRouter = GoRouter(
   initialLocation: RouteNames.home.path,
@@ -17,8 +18,9 @@ final appRouter = GoRouter(
   observers: [],
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (_, __, navigationShell) =>
-          DashBoardWrapper(navigationShell: navigationShell),
+      builder:
+          (_, __, navigationShell) =>
+              DashBoardWrapper(navigationShell: navigationShell),
       branches: [
         StatefulShellBranch(
           routes: [

@@ -7,36 +7,32 @@ class XTheme {
   static final _textTheme = GoogleFonts.robotoTextTheme();
 
   static ThemeData get light => FlexThemeData.light(
-        useMaterial3: true,
-        useMaterial3ErrorColors: true,
-        fontFamily: _fontFamily,
-        subThemesData: subThemesData,
-        textTheme: _textTheme,
-        colors: _lightSchemeColor,
-      );
+    useMaterial3: true,
+    useMaterial3ErrorColors: true,
+    fontFamily: _fontFamily,
+    subThemesData: subThemesData,
+    textTheme: _textTheme,
+    colors: _lightSchemeColor,
+  );
 
   static ThemeData get dark => FlexThemeData.dark(
-        useMaterial3: true,
-        useMaterial3ErrorColors: true,
-        fontFamily: _fontFamily,
-        subThemesData: subThemesData,
-        textTheme: _textTheme,
-        colors: _darkSchemeColor,
-      );
+    useMaterial3: true,
+    useMaterial3ErrorColors: true,
+    fontFamily: _fontFamily,
+    subThemesData: subThemesData,
+    textTheme: _textTheme,
+    colors: _darkSchemeColor,
+  );
 
   static FlexSubThemesData get subThemesData => const FlexSubThemesData(
-        appBarCenterTitle: true,
-        inputDecoratorIsFilled: false,
-        outlinedButtonOutlineSchemeColor: SchemeColor.primary,
-      );
+    appBarCenterTitle: true,
+    inputDecoratorIsFilled: false,
+    outlinedButtonOutlineSchemeColor: SchemeColor.primary,
+  );
 
-  static FlexSchemeColor get _lightSchemeColor => const FlexSchemeColor(
-        primary: Colors.blue,
-        secondary: Colors.cyan,
-      );
+  static FlexSchemeColor get _lightSchemeColor =>
+      const FlexSchemeColor(primary: Colors.blue, secondary: Colors.cyan);
 
-  static FlexSchemeColor get _darkSchemeColor => const FlexSchemeColor(
-        primary: Colors.blue,
-        secondary: Colors.cyan,
-      );
+  static FlexSchemeColor get _darkSchemeColor =>
+      const FlexSchemeColor(primary: Colors.blue, secondary: Colors.cyan);
 }

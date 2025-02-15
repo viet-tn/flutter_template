@@ -8,16 +8,12 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.settings),
-      ),
+      appBar: AppBar(title: Text(context.l10n.settings)),
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(context.l10n.settings),
-            ],
+            children: [Text(context.l10n.settings)],
           ),
         ),
       ),
