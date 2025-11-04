@@ -1,0 +1,22 @@
+flavors:
+  dev:
+    app:
+      name: "[Dev] Flutter template"
+    android:
+      applicationId: "dev.flutter.template"  
+    ios:
+      bundleId: "dev.flutter.template"
+  stag:
+    app:
+      name: "[Stag] Flutter template"
+    android:
+      applicationId: "stag.flutter.template"  
+    ios:
+      bundleId: "stag.flutter.template"
+  prod:
+    app:
+      name: "Flutter template"
+    android:
+      applicationId: "com.flutter.template"
+    ios:
+      bundleId: "com.flutter.template"

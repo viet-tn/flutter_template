@@ -1,0 +1,14 @@
+
+{
+  "@@locale": "en",
+  "title": "Flutter template",
+  "flavorPrefixTag": "{flavor, select, other{} dev{[Dev] } stag{[Stag] }}",
+  "@flavorPrefixTag": {
+      "description": "Flavor prefix tag",
+      "placeholders": {
+          "flavor": {
+            "type":"String"
+          }
+      }
+  }
+}
