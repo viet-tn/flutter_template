@@ -30,7 +30,7 @@ class AuthClient {
       final res = await _client.post(ApiRoute.signUp, data: req.toJson());
       res.checkDataType<Map<String, dynamic>>();
       return unit;
-    }, (err, _) => err.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 
   TaskEither<AppError, LoginResponse> loginWithEmailAndPassword(
@@ -43,6 +43,6 @@ class AuthClient {
       );
       final data = res.checkDataType<Map<String, dynamic>>();
       return LoginResponse.fromJson(data);
-    }, (err, _) => err.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 }

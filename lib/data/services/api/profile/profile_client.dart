@@ -27,6 +27,6 @@ class ProfileClient {
       final res = await _client.get(ApiRoute.me);
       final data = res.checkDataType<Map<String, dynamic>>();
       return UserResponse.fromJson(data);
-    }, (e, _) => e.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 }

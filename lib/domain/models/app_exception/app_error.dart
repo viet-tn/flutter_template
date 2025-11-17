@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 part 'app_error.freezed.dart';
 
@@ -21,9 +22,12 @@ enum AppErrorCode {
   databaseNotFound,
   databaseConstraint,
 
-  // Parse/Serialization errors
-  parseJson,
-  parseInvalidData,
+  // Parse errors
+  parseFailed,
+
+  // Serialization errors
+  encodingFailed,
+  decodingFailed,
 
   // Business logic errors
   validationFailed,
@@ -45,21 +49,21 @@ sealed class AppError with _$AppError {
     int? statusCode,
     String? responseBody,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = ApiError;
 
   const factory AppError.unauthorized({
     @Default(AppErrorCode.apiUnauthorized) AppErrorCode code,
     @Default('Unauthorized access') String? message,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = UnauthorizedError;
 
   const factory AppError.timeout({
     @Default(AppErrorCode.apiTimeout) AppErrorCode code,
     @Default('Request timeout') String? message,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = TimeoutError;
 
   // Database errors
@@ -67,17 +71,36 @@ sealed class AppError with _$AppError {
     required AppErrorCode code,
     String? message,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = DatabaseError;
 
   // Parse errors
   const factory AppError.parse({
-    @Default(AppErrorCode.parseJson) AppErrorCode code,
+    @Default(AppErrorCode.parseFailed) AppErrorCode code,
+    required Object? data,
     String? message,
     String? fieldName,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = ParseError;
+
+  // Encoding errors
+  const factory AppError.encoding({
+    @Default(AppErrorCode.encodingFailed) AppErrorCode code,
+    required Object? data,
+    String? message,
+    Object? originalError,
+    Trace? stackTrace,
+  }) = EncodingError;
+
+  // Decoding errors
+  const factory AppError.decoding({
+    @Default(AppErrorCode.decodingFailed) AppErrorCode code,
+    required Object? data,
+    String? message,
+    Object? originalError,
+    Trace? stackTrace,
+  }) = DecodingError;
 
   // Validation errors
   const factory AppError.validation({
@@ -85,7 +108,7 @@ sealed class AppError with _$AppError {
     required String message,
     @Default({}) Map<String, String> fieldErrors,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = ValidationError;
 
   // Unknown/Generic errors
@@ -93,7 +116,7 @@ sealed class AppError with _$AppError {
     @Default(AppErrorCode.unknown) AppErrorCode code,
     String? message,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = UnknownError;
 
   // Cancelled operation
@@ -101,7 +124,7 @@ sealed class AppError with _$AppError {
     @Default(AppErrorCode.cancelled) AppErrorCode code,
     @Default('Operation cancelled') String? message,
     Object? originalError,
-    StackTrace? stackTrace,
+    Trace? stackTrace,
   }) = CancelledError;
 
   String get technicalDetails {
@@ -138,6 +161,20 @@ sealed class AppError with _$AppError {
         originalError: var originalError,
       ) =>
         'Parse Error [$code]${fieldName != null ? ' (Field: $fieldName)' : ''}: $message\nOriginal: $originalError',
+      EncodingError(
+        code: var code,
+        data: var data,
+        message: var message,
+        originalError: var originalError,
+      ) =>
+        'Encoding Error [$code]${' (Data: $data)'}: $message\nOriginal: $originalError',
+      DecodingError(
+        code: var code,
+        data: var data,
+        message: var message,
+        originalError: var originalError,
+      ) =>
+        'Decoding Error [$code]${' (Data: $data)'}: $message\nOriginal: $originalError',
       ValidationError(
         code: var code,
         fieldErrors: var fieldErrors,

@@ -4,9 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../domain/models/app_exception/app_error.dart';
 import '../../services/api/models/auth/login_request.dart';
 import '../../services/api/models/auth/sign_up_request.dart';
-import '../../../domain/models/auth/token_model.dart';
 import '../../services/api/auth/auth_client.dart';
-import '../../services/local/shared_preferences_service.dart';
 import 'auth_repository.dart';
 
 part 'auth_repository_impl.g.dart';

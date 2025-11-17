@@ -40,7 +40,7 @@ class AuthController extends _$AuthController {
     if (data == null) {
       state = AsyncError(
         AppError.validation(message: 'Invalid login data'),
-        Trace.current(),
+        Trace.current().terse,
       );
       return;
     }
@@ -61,7 +61,7 @@ class AuthController extends _$AuthController {
     TaskEither<AppError, Unit> logoutAndExpire() {
       return TaskEither.Do(($) async {
         await $(_authRepository.logout());
-        await $(_tokenRepository.expireSession());
+        await $(_tokenRepository.deleteToken());
         return unit;
       });
     }
@@ -70,7 +70,7 @@ class AuthController extends _$AuthController {
       result.match(
         (l) {
           Log.e('Failed to logout', err: l);
-          state = AsyncError(l, l.stackTrace ?? Trace.current());
+          state = AsyncError(l, l.stackTrace ?? Trace.current().terse);
         },
         (_) {
           state = const AsyncData(AuthStatus.unauthenticated);

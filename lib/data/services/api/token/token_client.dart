@@ -4,6 +4,7 @@ import 'dart:io' show HttpHeaders;
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 import '../../../../domain/models/app_exception/app_error.dart';
 import '../../../../utils/extensions/dio_extension.dart';
@@ -50,7 +51,7 @@ class TokenClient {
             code: AppErrorCode.apiServerError,
             message: 'Token refresh failed',
             originalError: e,
-            stackTrace: st,
+            stackTrace: Trace.from(st).terse,
           ),
         );
         _refreshing!.complete(Left(error));
@@ -72,6 +73,6 @@ class TokenClient {
       );
       final data = res.checkDataType<Map<String, dynamic>>();
       return RefreshTokenResponse.fromJson(data);
-    }, (err, _) => err.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 }

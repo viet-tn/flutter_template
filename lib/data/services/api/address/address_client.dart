@@ -28,7 +28,7 @@ class AddressClient {
       final res = await _client.get(ApiRoute.provinces);
       final data = res.checkDataType<List>();
       return data.map((e) => ProvinceResponse.fromJson(e)).toList();
-    }, (err, _) => err.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 
   TaskEither<AppError, List<WardResponse>> getWardList(String provinceCode) {
@@ -36,6 +36,6 @@ class AddressClient {
       final res = await _client.get<List>(ApiRoute.wards(provinceCode));
       final data = res.checkDataType<List>();
       return data.map((e) => WardResponse.fromJson(e)).toList();
-    }, (err, _) => err.toAppError());
+    }, (error, stackTrace) => error.toAppError(stackTrace));
   }
 }

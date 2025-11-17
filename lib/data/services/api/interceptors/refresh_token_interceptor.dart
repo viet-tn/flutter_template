@@ -71,7 +71,7 @@ class RefreshTokenInterceptor extends QueuedInterceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == HttpStatus.unauthorized) {
-      await _tokenRepo.expireSession().run();
+      await _tokenRepo.deleteToken().run();
     }
     return handler.next(err);
   }

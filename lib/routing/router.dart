@@ -81,20 +81,17 @@ Future<String?> _redirect(
 ) async {
   final authStatus =
       ref.read(authControllerProvider).value ?? AuthStatus.unknown;
-  final loggedIn = authStatus == AuthStatus.authenticated;
-  if (loggedIn) {
+  if (authStatus == AuthStatus.expired) {
+    XSnackBar.showWarning(context, content: 'Phiên đăng nhập đã hết hạn'.hc);
+  }
+  if (authStatus == AuthStatus.authenticated) {
     if (XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
       return XRoute.home.path;
     }
-  } else {
+  }
+  if (authStatus == AuthStatus.unauthenticated ||
+      authStatus == AuthStatus.expired) {
     if (!XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
-      bool isSessionExpired = authStatus == AuthStatus.expired;
-      if (isSessionExpired) {
-        XSnackBar.showWarning(
-          context,
-          content: 'Phiên đăng nhập đã hết hạn'.hc,
-        );
-      }
       return XRoute.login.path;
     }
   }

@@ -6,5 +6,5 @@ import '../../../domain/models/auth/token_model.dart';
 abstract class TokenRepository {
   TaskEither<AppError, Option<TokenModel>> getUsableToken();
   TaskEither<AppError, Unit> setToken(TokenModel token);
-  TaskEither<AppError, Unit> expireSession();
+  TaskEither<AppError, Unit> deleteToken();
 }
