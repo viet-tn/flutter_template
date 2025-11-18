@@ -15,8 +15,8 @@ SecureStorageService secureStorageService(Ref ref) {
         accessibility: KeychainAccessibility.first_unlock_this_device,
       ),
       webOptions: WebOptions(
-        wrapKey: 'farm_management_app_wrap_key',
-        wrapKeyIv: 'farm_management_app_wrap_key_iv',
+        wrapKey: 'STAR10Cx2ryEUd/TGNaa/9zfnRa/RUVV9SsnIxJKpMw=',
+        wrapKeyIv: 'EkRJN5abaSPL/ALuFmvcyQ==',
       ),
     ),
   );

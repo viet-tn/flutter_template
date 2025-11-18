@@ -1,3 +1,6 @@
 arb-dir: lib/ui/core/localization
 template-arb-file: app_vi.arb
 nullable-getter: false
+synthetic-package: false
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
