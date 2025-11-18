@@ -34,7 +34,7 @@ class _AppState extends ConsumerState<App> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       onGenerateTitle: F.title,
-      routerConfig: ref.watch(routerProvider),
+      routerConfig: ref.watch(goRouterProvider),
       locale: const Locale('vi', 'VN'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

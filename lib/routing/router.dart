@@ -9,6 +9,7 @@ import '../ui/auth/login/widgets/login_screen.dart';
 import '../ui/auth/sign_up/widgets/sign_up_screen.dart';
 import '../ui/home/widgets/home_screen.dart';
 import '../ui/settings/widgets/settings_screen.dart';
+import 'auth_state_listenable.dart';
 import 'route.dart';
 import 'widgets/dashboard_wrapper.dart';
 
@@ -18,14 +19,31 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
-@riverpod
-GoRouter router(Ref ref) {
+@Riverpod(keepAlive: true)
+GoRouter goRouter(Ref ref) {
+  final authStateListenable = ref.watch(authStateListenableProvider);
   final router = GoRouter(
     initialLocation: XRoute.home.path,
     debugLogDiagnostics: kDebugMode,
     navigatorKey: _rootNavigatorKey,
     observers: [],
-    redirect: (context, state) => _redirect(context, state, ref),
+    refreshListenable: authStateListenable,
+    redirect: (context, state) {
+      final authState = ref.read(authControllerProvider).value;
+      if (authState == AuthState.authenticated) {
+        if (XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
+          return XRoute.home.path;
+        }
+      }
+      if (authState == AuthState.unauthenticated ||
+          authState == AuthState.expired) {
+        if (!XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
+          return XRoute.login.path;
+        }
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: XRoute.login.path,
@@ -64,31 +82,7 @@ GoRouter router(Ref ref) {
     ],
   );
 
-  ref.listen<AsyncValue<AuthStatus>>(authControllerProvider, (_, _) {
-    router.refresh();
-  });
   ref.onDispose(router.dispose);
 
   return router;
-}
-
-Future<String?> _redirect(
-  BuildContext context,
-  GoRouterState state,
-  Ref ref,
-) async {
-  final authStatus = await ref.read(authControllerProvider.future);
-  if (authStatus == AuthStatus.authenticated) {
-    if (XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
-      return XRoute.home.path;
-    }
-  }
-  if (authStatus == AuthStatus.unauthenticated ||
-      authStatus == AuthStatus.expired) {
-    if (!XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
-      return XRoute.login.path;
-    }
-  }
-
-  return null;
 }

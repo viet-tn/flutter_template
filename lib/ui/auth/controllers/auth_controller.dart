@@ -20,11 +20,11 @@ class AuthController extends _$AuthController {
   );
 
   @override
-  Future<AuthStatus> build() async {
-    final result = await _authStatus.run();
+  Future<AuthState> build() async {
+    final result = await _authState.run();
     return result.match((l) {
       Log.e('Failed to get auth status', err: l);
-      return AuthStatus.unauthenticated;
+      return AuthState.unauthenticated;
     }, (isLoggedIn) => isLoggedIn);
   }
 
@@ -36,6 +36,7 @@ class AuthController extends _$AuthController {
       return;
     }
     state = const AsyncLoading();
+    await Future.delayed(const Duration(milliseconds: 2000));
     if (data == null) {
       state = AsyncError(
         const AppError.validation(message: 'Invalid login data'),
@@ -50,40 +51,46 @@ class AuthController extends _$AuthController {
         state = AsyncError(l, l.stackTrace ?? Trace.current().terse);
       },
       (_) {
-        state = const AsyncData(AuthStatus.authenticated);
+        state = const AsyncData(AuthState.authenticated);
         onSuccess();
       },
     );
   }
 
   void logout() async {
-    TaskEither<AppError, Unit> logoutAndExpire() {
-      return TaskEither.Do(($) async {
-        await $(_authRepository.logout());
-        await $(_tokenRepository.deleteToken());
-        return unit;
-      });
+    if (state is AsyncLoading) {
+      return;
     }
+    state = const AsyncLoading();
+    await Future.delayed(const Duration(milliseconds: 2000));
 
-    await logoutAndExpire().run().then((result) {
+    await _logoutAndExpire().run().then((result) {
       result.match(
         (l) {
           Log.e('Failed to logout', err: l);
           state = AsyncError(l, l.stackTrace ?? Trace.current().terse);
         },
         (_) {
-          state = const AsyncData(AuthStatus.unauthenticated);
+          state = const AsyncData(AuthState.unauthenticated);
         },
       );
     });
   }
 
-  TaskEither<AppError, AuthStatus> get _authStatus {
+  TaskEither<AppError, AuthState> get _authState {
     return _tokenRepository.getUsableToken().flatMap(
       (maybeToken) => maybeToken.match(
-        () => TaskEither.right(AuthStatus.unauthenticated),
-        (_) => TaskEither.right(AuthStatus.authenticated),
+        () => TaskEither.right(AuthState.unauthenticated),
+        (_) => TaskEither.right(AuthState.authenticated),
       ),
     );
+  }
+
+  TaskEither<AppError, Unit> _logoutAndExpire() {
+    return TaskEither.Do(($) async {
+      await $(_authRepository.logout());
+      await $(_tokenRepository.deleteToken());
+      return unit;
+    });
   }
 }

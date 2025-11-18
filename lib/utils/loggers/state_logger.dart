@@ -13,6 +13,7 @@ final class StateLogger extends ProviderObserver {
     if (newValue is AsyncError) {
       Log.e('''
         {
+          "provider": "${context.provider.name ?? context.provider.runtimeType}",
           "previousValue": "$previousValue",
           "newValue": "$newValue"
         }''');
@@ -20,6 +21,7 @@ final class StateLogger extends ProviderObserver {
     }
     Log.d('''
       {
+        "provider": "${context.provider.name ?? context.provider.runtimeType}",
         "previousValue": "$previousValue",
         "newValue": "$newValue"
       }''');
