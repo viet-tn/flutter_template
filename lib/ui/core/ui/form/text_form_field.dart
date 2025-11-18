@@ -9,6 +9,7 @@ import 'label.dart';
 class XTextFormField extends StatefulWidget {
   const XTextFormField({
     super.key,
+    this.enabled = true,
     required this.name,
     this.isRequired = true,
     this.obscureText = false,
@@ -25,6 +26,7 @@ class XTextFormField extends StatefulWidget {
     this.onSubmitted,
   });
 
+  final bool enabled;
   final String name;
   final bool isRequired;
   final bool obscureText;
@@ -100,6 +102,7 @@ class _XTextFormFieldState extends State<XTextFormField> {
       valueListenable: isObscured,
       builder: (context, value, child) {
         return FormBuilderTextField(
+          enabled: widget.enabled,
           name: widget.name,
           key: textFieldKey,
           onChanged: (value) {

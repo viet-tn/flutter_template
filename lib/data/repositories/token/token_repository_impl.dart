@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/models/app_exception/app_error.dart';
 import '../../../domain/models/auth/token_model.dart';
-import '../../../utils/extensions/fpdart_extension.dart';
+import '../../../utils/extensions/fp_extension.dart';
 import '../../services/api/token/token_client.dart';
 import '../../services/local/secure_storage_service.dart';
 import 'token_repository.dart';

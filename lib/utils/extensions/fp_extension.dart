@@ -8,7 +8,7 @@ import '../../domain/models/app_exception/app_error.dart';
 const _jsonEncoder = JsonEncoder();
 const _jsonDecoder = JsonDecoder();
 
-extension FpdartExtension on Map<String, dynamic> {
+extension FpExtension on Map<String, dynamic> {
   Either<AppError, String> jsonEncodeSafe() {
     try {
       final encoded = _jsonEncoder.convert(this);
@@ -24,9 +24,21 @@ extension FpdartExtension on Map<String, dynamic> {
       );
     }
   }
+
+  static Either<AppError, T> safelyParse<T>(T Function() parser) =>
+      Either.tryCatch(
+        () => parser(),
+        (err, st) => AppError.parse(
+          code: AppErrorCode.parseFailed,
+          data: null,
+          message: 'Failed to parse data',
+          originalError: err,
+          stackTrace: Trace.from(st).terse,
+        ),
+      );
 }
 
-extension FpdartStringExtension on String {
+extension FpStringExtension on String {
   Either<AppError, Map<String, dynamic>> jsonDecodeSafe() {
     try {
       final decoded = _jsonDecoder.convert(this) as Map<String, dynamic>;

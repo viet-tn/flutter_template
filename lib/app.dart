@@ -24,7 +24,7 @@ class _AppState extends ConsumerState<App> {
   }
 
   void _init() async {
-    await ref.read(authControllerProvider.future);
+    await ref.read(authControllerProvider.notifier).initialize();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       FlutterNativeSplash.remove();
     });

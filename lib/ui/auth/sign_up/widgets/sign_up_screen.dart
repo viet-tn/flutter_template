@@ -6,12 +6,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../routing/route.dart';
 import '../../../../utils/extensions/async_value.dart';
+import '../../../../utils/extensions/string_extension.dart';
 import '../../../../utils/form/single_space_formatter.dart';
 import '../../../../utils/snack_bar.dart';
 import '../../../core/themes/dimens.dart';
 import '../../../core/ui/form/text_form_field.dart';
 import '../../../core/ui/logo.dart';
 import '../../widgets/email_field.dart';
+import '../../widgets/form_switcher.dart';
 import '../../widgets/password_field.dart';
 import '../../widgets/submit_button.dart';
 import '../controllers/sign_up_controller.dart';
@@ -25,6 +27,22 @@ class SignUpScreen extends ConsumerStatefulWidget {
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+
+  void _submit() {
+    final isValidate = _formKey.currentState?.saveAndValidate();
+    if (isValidate != true) return;
+    FocusScope.of(context).unfocus();
+    ref
+        .read(signUpControllerProvider.notifier)
+        .signUp(
+          _formKey.currentState?.value,
+          onSuccess: () {
+            context.goNamed(XRoute.login.name);
+            XSnackBar.showSuccess(context, content: 'Đăng ký thành công');
+          },
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen<AsyncValue<void>>(signUpControllerProvider, (previous, next) {
@@ -67,26 +85,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                       const EmailField(),
                       const PasswordField(),
-                      SubmitButton(
+                      SubmitButton(label: 'Đăng ký'.hc, onPressed: _submit),
+                      AuthFormSwitcher(
+                        description: 'Đã có tài khoản?',
+                        actionLabel: 'Đăng nhập',
                         onPressed: () {
-                          final isValidate = _formKey.currentState
-                              ?.saveAndValidate();
-                          if (isValidate != true) return;
-                          FocusScope.of(context).unfocus();
-                          ref
-                              .read(signUpControllerProvider.notifier)
-                              .signUp(
-                                _formKey.currentState?.value,
-                                onSuccess: () {
-                                  context.goNamed(XRoute.login.name);
-                                  XSnackBar.showSuccess(
-                                    context,
-                                    content: 'Đăng ký thành công',
-                                  );
-                                },
-                              );
+                          context.goNamed(XRoute.login.name);
                         },
-                        method: CurrentPage.signUp,
                       ),
                     ],
                   ),

@@ -29,7 +29,7 @@ GoRouter goRouter(Ref ref) {
     observers: [],
     refreshListenable: authStateListenable,
     redirect: (context, state) {
-      final authState = ref.read(authControllerProvider).value;
+      final authState = ref.read(authControllerProvider);
       if (authState == AuthState.authenticated) {
         if (XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
           return XRoute.home.path;

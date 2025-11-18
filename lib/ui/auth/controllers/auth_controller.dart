@@ -1,6 +1,6 @@
+import 'package:flutter_riverpod/experimental/mutation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:stack_trace/stack_trace.dart';
 
 import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/auth/auth_repository_impl.dart';
@@ -8,6 +8,7 @@ import '../../../data/repositories/token/token_repository.dart';
 import '../../../data/repositories/token/token_repository_impl.dart';
 import '../../../data/services/api/models/auth/login_request.dart';
 import '../../../domain/models/app_exception/app_error.dart';
+import '../../../utils/extensions/fp_extension.dart';
 import '../../../utils/loggers/logger.dart';
 
 part 'auth_controller.g.dart';
@@ -19,69 +20,49 @@ class AuthController extends _$AuthController {
     tokenRepositoryProvider,
   );
 
+  static final loginMut = Mutation<void>();
+  static final logoutMut = Mutation<void>();
+
   @override
-  Future<AuthState> build() async {
+  AuthState build() {
+    return AuthState.unknown;
+  }
+
+  Future<void> initialize() async {
     final result = await _authState.run();
-    return result.match((l) {
-      Log.e('Failed to get auth status', err: l);
+    state = result.match((l) {
+      Log.e('Failed to get auth state', err: l);
       return AuthState.unauthenticated;
-    }, (isLoggedIn) => isLoggedIn);
+    }, (authState) => authState);
   }
 
-  void loginWithEmailAndPassword(
-    Map<String, Object?>? data, {
-    required void Function() onSuccess,
-  }) async {
-    if (state is AsyncLoading) {
-      return;
-    }
-    state = const AsyncLoading();
-    await Future.delayed(const Duration(milliseconds: 2000));
-    if (data == null) {
-      state = AsyncError(
-        const AppError.validation(message: 'Invalid login data'),
-        Trace.current().terse,
-      );
-      return;
-    }
-    final req = LoginRequest.fromJson(data);
-    final result = await _authRepository.loginWithEmailAndPassword(req).run();
-    result.match(
-      (l) {
-        state = AsyncError(l, l.stackTrace ?? Trace.current().terse);
-      },
-      (_) {
-        state = const AsyncData(AuthState.authenticated);
-        onSuccess();
-      },
-    );
+  TaskEither<AppError, Unit> loginWithEmailAndPassword(
+    Map<String, Object?>? data,
+  ) {
+    return FpExtension.safelyParse(
+      () => LoginRequest.fromJson(data ?? {}),
+    ).toTaskEither().flatMap((req) {
+      return TaskEither.Do(($) async {
+        await $(_authRepository.loginWithEmailAndPassword(req));
+        state = AuthState.authenticated;
+        return unit;
+      });
+    });
   }
 
-  void logout() async {
-    if (state is AsyncLoading) {
-      return;
-    }
-    state = const AsyncLoading();
-    await Future.delayed(const Duration(milliseconds: 2000));
-
-    await _logoutAndExpire().run().then((result) {
-      result.match(
-        (l) {
-          Log.e('Failed to logout', err: l);
-          state = AsyncError(l, l.stackTrace ?? Trace.current().terse);
-        },
-        (_) {
-          state = const AsyncData(AuthState.unauthenticated);
-        },
-      );
+  TaskEither<AppError, Unit> logout() {
+    state = AuthState.unauthenticated;
+    return _logoutAndExpire().mapLeft((l) {
+      Log.e('Logout failed', err: l);
+      return l;
     });
   }
 
   TaskEither<AppError, AuthState> get _authState {
-    return _tokenRepository.getUsableToken().flatMap(
+    return _tokenRepository.getUsableToken().map(
       (maybeToken) => maybeToken.match(
-        () => TaskEither.right(AuthState.unauthenticated),
-        (_) => TaskEither.right(AuthState.authenticated),
+        () => AuthState.unauthenticated,
+        (_) => AuthState.authenticated,
       ),
     );
   }

@@ -4,14 +4,21 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import '../../core/ui/form/text_form_field.dart';
 
 class PasswordField extends StatelessWidget {
-  const PasswordField({super.key, this.passwordHint = true, this.onSubmitted});
+  const PasswordField({
+    super.key,
+    this.passwordHint = true,
+    this.onSubmitted,
+    this.enabled = true,
+  });
 
   final bool passwordHint;
   final void Function(String?)? onSubmitted;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return XTextFormField(
+      enabled: enabled,
       name: 'password',
       labelText: 'Mật khẩu',
       helperText: passwordHint ? 'Mật khẩu phải chứa ít nhất 8 kí tự' : null,

@@ -79,7 +79,6 @@ sealed class AppError with _$AppError {
     @Default(AppErrorCode.parseFailed) AppErrorCode code,
     required Object? data,
     String? message,
-    String? fieldName,
     Object? originalError,
     Trace? stackTrace,
   }) = ParseError;
@@ -156,11 +155,10 @@ sealed class AppError with _$AppError {
         'Database Error [$code]: $message\nOriginal: $originalError',
       ParseError(
         code: var code,
-        fieldName: var fieldName,
         message: var message,
         originalError: var originalError,
       ) =>
-        'Parse Error [$code]${fieldName != null ? ' (Field: $fieldName)' : ''}: $message\nOriginal: $originalError',
+        'Parse Error [$code]: $message\nOriginal: $originalError',
       EncodingError(
         code: var code,
         data: var data,
