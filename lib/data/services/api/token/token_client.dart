@@ -17,7 +17,7 @@ part 'token_client.g.dart';
 
 Completer<Either<AppError, RefreshTokenResponse>>? _refreshing;
 
-@Riverpod(dependencies: [tokenHttpClient])
+@Riverpod(keepAlive: true)
 TokenClient tokenClient(Ref ref) {
   final httpClient = ref.watch(tokenHttpClientProvider);
   return TokenClient(httpClient);

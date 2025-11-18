@@ -9,8 +9,6 @@ import '../ui/auth/login/widgets/login_screen.dart';
 import '../ui/auth/sign_up/widgets/sign_up_screen.dart';
 import '../ui/home/widgets/home_screen.dart';
 import '../ui/settings/widgets/settings_screen.dart';
-import '../utils/extensions/string_extension.dart';
-import '../utils/snack_bar.dart';
 import 'route.dart';
 import 'widgets/dashboard_wrapper.dart';
 
@@ -20,7 +18,7 @@ final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
-@Riverpod(dependencies: [AuthController])
+@riverpod
 GoRouter router(Ref ref) {
   final router = GoRouter(
     initialLocation: XRoute.home.path,
@@ -32,12 +30,12 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: XRoute.login.path,
         name: XRoute.login.name,
-        builder: (context, state) => const LoginScreen(),
+        builder: (_, _) => const LoginScreen(),
       ),
       GoRoute(
         path: XRoute.signUp.path,
         name: XRoute.signUp.name,
-        builder: (context, state) => const SignUpScreen(),
+        builder: (_, _) => const SignUpScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, navigationShell) =>
@@ -79,11 +77,7 @@ Future<String?> _redirect(
   GoRouterState state,
   Ref ref,
 ) async {
-  final authStatus =
-      ref.read(authControllerProvider).value ?? AuthStatus.unknown;
-  if (authStatus == AuthStatus.expired) {
-    XSnackBar.showWarning(context, content: 'Phiên đăng nhập đã hết hạn'.hc);
-  }
+  final authStatus = await ref.read(authControllerProvider.future);
   if (authStatus == AuthStatus.authenticated) {
     if (XRoute.noAuthRoutePaths().contains(state.matchedLocation)) {
       return XRoute.home.path;

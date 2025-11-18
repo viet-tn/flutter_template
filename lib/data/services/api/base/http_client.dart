@@ -27,7 +27,7 @@ Dio tokenHttpClient(Ref ref) {
   return client;
 }
 
-@Riverpod(keepAlive: true, dependencies: [tokenRepository])
+@Riverpod(keepAlive: true)
 Dio httpClient(Ref ref) {
   final client = Dio(_options);
   final tokenRepo = ref.watch(tokenRepositoryProvider);

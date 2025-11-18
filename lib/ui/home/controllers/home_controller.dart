@@ -6,7 +6,7 @@ import '../../../domain/models/user/user.dart';
 
 part 'home_controller.g.dart';
 
-@Riverpod(dependencies: [profileRepository])
+@riverpod
 class HomeController extends _$HomeController {
   late final ProfileRepository _profileRepo = ref.watch(
     profileRepositoryProvider,

@@ -8,7 +8,7 @@ import 'profile_repository.dart';
 
 part 'profile_repository_impl.g.dart';
 
-@Riverpod(dependencies: [profileClient])
+@riverpod
 ProfileRepository profileRepository(Ref ref) {
   final client = ref.read(profileClientProvider);
   return ProfileRepositoryImpl(client);

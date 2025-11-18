@@ -9,8 +9,8 @@ part 'secure_storage_service.g.dart';
 
 @Riverpod(keepAlive: true)
 SecureStorageService secureStorageService(Ref ref) {
-  return SecureStorageService(
-    const FlutterSecureStorage(
+  return const SecureStorageService(
+    FlutterSecureStorage(
       iOptions: IOSOptions(
         accessibility: KeychainAccessibility.first_unlock_this_device,
       ),

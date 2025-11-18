@@ -13,7 +13,7 @@ SharedPreferencesWithCache sharedPreferencesWithCache(Ref ref) {
   throw UnimplementedError();
 }
 
-@Riverpod(keepAlive: true, dependencies: [sharedPreferencesWithCache])
+@Riverpod(keepAlive: true)
 SharedPreferencesService sharedPreferencesService(Ref ref) {
   final prefs = ref.watch(sharedPreferencesWithCacheProvider);
   return SharedPreferencesService(prefs);

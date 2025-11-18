@@ -10,7 +10,7 @@ import 'token_repository.dart';
 
 part 'token_repository_impl.g.dart';
 
-@Riverpod(dependencies: [tokenClient, secureStorageService])
+@Riverpod(keepAlive: true)
 TokenRepository tokenRepository(Ref ref) {
   final client = ref.watch(tokenClientProvider);
   final storage = ref.watch(secureStorageServiceProvider);
@@ -81,7 +81,7 @@ class TokenRepositoryImpl implements TokenRepository {
     return _getToken().flatMap(
       (maybeToken) => maybeToken.fold(
         () => TaskEither.left(
-          AppError.database(
+          const AppError.database(
             code: AppErrorCode.databaseNotFound,
             message: 'no token found to update access token',
           ),

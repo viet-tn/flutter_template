@@ -53,7 +53,7 @@ extension DioErrorExtension on DioException {
         );
 
       case DioExceptionType.cancel:
-        return AppError.cancelled();
+        return const AppError.cancelled();
 
       case DioExceptionType.connectionError:
         return AppError.api(

@@ -27,7 +27,7 @@ class SignUpController extends _$SignUpController {
     state = const AsyncLoading();
     if (data == null) {
       state = AsyncError(
-        AppError.validation(message: 'Sign up data is null'),
+        const AppError.validation(message: 'Sign up data is null'),
         Trace.current(),
       );
       return;

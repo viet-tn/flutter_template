@@ -9,7 +9,7 @@ import 'auth_repository.dart';
 
 part 'auth_repository_impl.g.dart';
 
-@Riverpod(dependencies: [authClient])
+@Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) {
   final authClient = ref.watch(authClientProvider);
   return AuthRepositoryImpl(authClient);

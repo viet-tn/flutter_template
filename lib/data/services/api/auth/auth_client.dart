@@ -13,7 +13,7 @@ import '../models/auth/login_response.dart';
 
 part 'auth_client.g.dart';
 
-@Riverpod(dependencies: [httpClient])
+@Riverpod(keepAlive: true)
 AuthClient authClient(Ref ref) {
   final httpClient = ref.watch(httpClientProvider);
   return AuthClient(httpClient);

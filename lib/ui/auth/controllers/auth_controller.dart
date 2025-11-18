@@ -12,7 +12,7 @@ import '../../../utils/loggers/logger.dart';
 
 part 'auth_controller.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [authRepository, tokenRepository])
+@Riverpod(keepAlive: true)
 class AuthController extends _$AuthController {
   late final AuthRepository _authRepository = ref.watch(authRepositoryProvider);
   late final TokenRepository _tokenRepository = ref.watch(
@@ -21,7 +21,6 @@ class AuthController extends _$AuthController {
 
   @override
   Future<AuthStatus> build() async {
-    state = const AsyncData(AuthStatus.unknown);
     final result = await _authStatus.run();
     return result.match((l) {
       Log.e('Failed to get auth status', err: l);
@@ -39,7 +38,7 @@ class AuthController extends _$AuthController {
     state = const AsyncLoading();
     if (data == null) {
       state = AsyncError(
-        AppError.validation(message: 'Invalid login data'),
+        const AppError.validation(message: 'Invalid login data'),
         Trace.current().terse,
       );
       return;
@@ -83,7 +82,7 @@ class AuthController extends _$AuthController {
     return _tokenRepository.getUsableToken().flatMap(
       (maybeToken) => maybeToken.match(
         () => TaskEither.right(AuthStatus.unauthenticated),
-        (t) => TaskEither.right(AuthStatus.authenticated),
+        (_) => TaskEither.right(AuthStatus.authenticated),
       ),
     );
   }

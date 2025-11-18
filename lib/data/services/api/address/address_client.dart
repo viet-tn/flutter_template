@@ -12,7 +12,7 @@ import '../models/address/ward_response.dart';
 
 part 'address_client.g.dart';
 
-@Riverpod(dependencies: [httpClient])
+@riverpod
 AddressClient addressClient(Ref ref) {
   final httpClient = ref.watch(httpClientProvider);
   return AddressClient(httpClient);

@@ -11,7 +11,7 @@ import '../models/user/user_response.dart';
 
 part 'profile_client.g.dart';
 
-@Riverpod(dependencies: [httpClient])
+@riverpod
 ProfileClient profileClient(Ref ref) {
   final httpClient = ref.watch(httpClientProvider);
   return ProfileClient(httpClient);
