@@ -1,30 +1,48 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/services/local/shared_preferences_service.dart';
+import 'domain/models/env/env.dart';
+import 'flavors.dart';
 import 'utils/loggers/state_logger.dart';
 
 const kLocale = 'vi_VN';
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  final prefs = await SharedPreferencesWithCache.create(
-    cacheOptions: const SharedPreferencesWithCacheOptions(),
-  );
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = Env.sentryDsn;
+      options.environment = F.appFlavor.name;
+      // Only send errors in release mode
+      options.beforeSend = (event, hint) {
+        return kDebugMode ? null : event;
+      };
+    },
+    appRunner: () async {
+      WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+      final prefs = await SharedPreferencesWithCache.create(
+        cacheOptions: const SharedPreferencesWithCacheOptions(),
+      );
 
-  Intl.defaultLocale = kLocale;
-  await initializeDateFormatting(kLocale, null);
-  runApp(
-    ProviderScope(
-      overrides: [sharedPreferencesWithCacheProvider.overrideWithValue(prefs)],
-      observers: [StateLogger()],
-      child: await builder(),
-    ),
+      Intl.defaultLocale = kLocale;
+      await initializeDateFormatting(kLocale, null);
+      runApp(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesWithCacheProvider.overrideWithValue(prefs),
+          ],
+          observers: [StateLogger()],
+          child: await builder(),
+        ),
+      );
+    },
   );
 }

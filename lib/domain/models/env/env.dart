@@ -1,5 +1,6 @@
 abstract class Env {
   static const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+  static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
   static const String _connectTimeoutString = String.fromEnvironment(
     'CONNECT_TIMEOUT',
   );

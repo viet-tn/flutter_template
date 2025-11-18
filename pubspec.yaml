@@ -60,6 +60,7 @@ dependencies:
   shared_preferences: ^2.5.3
   stack_trace: ^1.12.1
   flutter_native_splash: ^2.4.7
+  sentry_flutter: ^9.8.0
 
 dev_dependencies:
   flutter_test:

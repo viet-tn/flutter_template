@@ -19,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
               child: SizedBox(
                 height: 1000,
                 child: Column(
+                  spacing: 20,
                   children: [
                     userAsync.when(
                       data: (data) {
@@ -28,6 +29,11 @@ class HomeScreen extends ConsumerWidget {
                         return Text(error.toString());
                       },
                       loading: CircularProgressIndicator.adaptive,
+                    ),
+                    FilledButton(
+                      onPressed: () =>
+                          throw StateError('This is test exception'),
+                      child: Text('Verify Sentry Setup'),
                     ),
                   ],
                 ),
